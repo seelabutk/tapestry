@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -d "tapestry/pbnj" ]; then
+if [ ! -d "tapestry/pbnj/.git" ]; then
     git submodule update --init
 else
     git submodule update
