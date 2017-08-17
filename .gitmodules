@@ -1,15 +1,15 @@
 [submodule "tapestry/rapidjson"]
 	path = tapestry/rapidjson
-	url = git@github.com:miloyip/rapidjson.git
+	url = https://github.com/miloyip/rapidjson.git
 [submodule "tapestry/pistache"]
 	path = tapestry/pistache
-	url = git@github.com:alanbirtles/pistache.git
+	url = https://github.com/alanbirtles/pistache.git
 [submodule "tapestry/pbnj"]
 	path = tapestry/pbnj
-	url = git@github.com:seelabutk/pbnj.git
+	url = https://github.com/seelabutk/pbnj.git
 [submodule "tapestry/ospray"]
 	path = tapestry/ospray
-	url = git@github.com:ospray/ospray.git
+	url = https://github.com/ospray/ospray.git
 [submodule "tapestry/enchiladas"]
 	path = tapestry/enchiladas
-	url = git@github.com:seelabutk/enchiladas.git
+	url = https://github.com/seelabutk/enchiladas.git
