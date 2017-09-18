@@ -3,7 +3,7 @@
 	url = https://github.com/miloyip/rapidjson.git
 [submodule "tapestry/pistache"]
 	path = tapestry/pistache
-	url = https://github.com/alanbirtles/pistache.git
+	url = https://github.com/seelabutk/pistache.git
 [submodule "tapestry/pbnj"]
 	path = tapestry/pbnj
 	url = https://github.com/seelabutk/pbnj.git
