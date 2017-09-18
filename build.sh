@@ -13,4 +13,4 @@ fi
 if [ ! -f "tapestry/embree-2.16.4.x86_64.linux.tar.gz" ]; then
     curl -L https://github.com/embree/embree/releases/download/v2.16.4/embree-2.16.4.x86_64.linux.tar.gz > tapestry/embree-2.16.4.x86_64.linux.tar.gz
 fi
-docker-compose build --no-cache 
+docker-compose build 
