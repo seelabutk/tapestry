@@ -1,8 +1,10 @@
-# Creates an Enchiladas container for the Tapestry project. 
+# Creates an Enchiladas container for the Tapestry project.
 # This Dockerfile was originally written by Tanner Hobson (thobson2@vols.utk.edu)
 
 FROM ubuntu:latest
 MAINTAINER Mohammad Raji <mahmadza@vols.utk.edu>
+
+ARG build_parallel
 
 RUN apt-get update && \
     apt-get install -y \
@@ -25,10 +27,10 @@ RUN true && \
           -DRAPIDJSON_BUILD_EXAMPLES:BOOL=OFF \
           -DRAPIDJSON_BUILD_TESTS:BOOL=OFF \
     && \
-    make && \
+    make ${build_parallel} && \
     make install && \
     rm -rf /opt/rapidjson
-    
+
 
 WORKDIR /opt/
 ADD ispc-v1.9.1-linux.tar.gz /opt/
@@ -50,7 +52,7 @@ RUN true && \
           -DOSPRAY_ENABLE_APPS:BOOL=OFF \
           -DOSPRAY_TASKING_SYSTEM=OpenMP \
     && \
-    make -j && \
+    make ${build_parallel} && \
     make install && \
     rm -rf /opt/ospray
 
@@ -68,7 +70,7 @@ RUN true && \
           -DOSPRAY_INSTALL_DIR=/usr/local/ \
           -Dembree_DIR=/opt/embree \
     && \
-    make -j && \
+    make ${build_parallel} && \
     make install
 
 CMD ["./server", "/config", "9010"]
