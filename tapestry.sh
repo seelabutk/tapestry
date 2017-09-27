@@ -756,6 +756,54 @@ tapestry-do-autoscale() {
 
 ################################################################################
 # NAME
+#     tapestry-do-scale
+#
+# SYNOPSIS
+#     ./tapestry.sh scale [-h] [-v] [-n NAME] REPLICAS
+#
+# DESCRIPTION
+#     Scale the number of replicas of the service NAME to REPLICAS.
+#
+# OPTIONS
+#     -h
+#         Print this help message
+#
+#     -v
+#         Print commands before running them
+#
+#     -n NAME
+#         The name of the service to scale (default "tapestry")
+#
+tapestry-do-scale() {
+    local opt_verbose opt_name opt_replicas opt OPTIND OPTARG
+    opt_verbose=
+    opt_name=tapestry
+    while getopts ":n:hv" opt; do
+        case "$opt" in
+            (h) tapestry-usage -n $LINENO;;
+            (v) opt_verbose=1;;
+            (n) opt_name=$OPTARG;;
+            (\?) tapestry-usage -n $LINENO -e "Unknown option: -$OPTARG";;
+        esac
+    done
+    shift $(($OPTIND-1))
+    opt_replicas=$1; shift
+
+    if ! [ "$opt_replicas" -eq "$opt_replicas" ] 2>/dev/null; then
+        tapestry-usage -n $LINENO -e "REPLICAS must be numeric"
+    fi
+
+    if [ "$opt_replicas" -lt 0 ]; then
+        tapestry-usage -n $LINENO -e "REPLICAS must be a positive number"
+    fi
+
+    tapestry-run ${opt_verbose:+-v} \
+        ${TAPESTRY_DOCKER_SUDO:+sudo} docker service scale \
+        "$opt_name=$opt_replicas"
+}
+
+################################################################################
+# NAME
 #     tapestry-usage
 #
 # SYNOPSIS
@@ -880,6 +928,7 @@ tapestry() {
         (logs) tapestry-do-logs "$@";;
         (examples) tapestry-do-examples "$@";;
         (autoscale) tapestry-do-autoscale "$@";;
+        (scale) tapestry-do-scale "$@";;
         (*) tapestry-usage -n $LINENO -e "Unknown action: '$action'";;
     esac
 }
