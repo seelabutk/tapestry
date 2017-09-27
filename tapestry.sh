@@ -459,13 +459,17 @@ tapestry-do-logs() {
     shift $(($OPTIND-1))
 
     IFS=$'\n'
-    lines=( $(${TAPESTRY_DOCKER_SUDO:+sudo} docker service ps "$opt_name") )
+    lines=( $(tapestry-run ${opt_verbose:+-v} \
+                           ${TAPESTRY_DOCKER_SUDO:+sudo} docker service ps \
+                           "$opt_name") )
 
     IFS=$' '
     first=( ${lines[1]} )
 
     id=${first[0]}
-    id2=$(${TAPESTRY_DOCKER_SUDO:+sudo} docker inspect --format "{{.Status.ContainerStatus.ContainerID}}" "$id")
+    id2=$(tapestry-run ${opt_verbose:+-v} \
+                       ${TAPESTRY_DOCKER_SUDO:+sudo} docker inspect \
+                       --format "{{.Status.ContainerStatus.ContainerID}}" "$id")
 
     tapestry-run ${opt_verbose:+-v} \
         ${TAPESTRY_DOCKER_SUDO:+sudo} docker logs "$id2"
