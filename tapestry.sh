@@ -113,9 +113,17 @@ tapestry-extract() {
 
     while [ $n -gt 0 ]; do
         n=$(($n - 1))
+
+        IFS=$'.'
         set -- "${parts[@]:$n:100}"
         case "$*" in
             (tar.gz)
+                IFS=$' '
+
+                if ! [ -d "$opt_directory" ]; then
+                    mkdir "$opt_directory"
+                fi
+
                 tapestry-run ${opt_verbose:+-v} tar \
                     x${opt_list:+v}f "$opt_archive" \
                     ${opt_directory:+-C "$opt_directory"}
