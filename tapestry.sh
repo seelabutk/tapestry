@@ -508,6 +508,245 @@ tapestry-do-examples() {
 
 ################################################################################
 # NAME
+#     tapestry-do-autoscale
+#
+# SYNOPSIS
+#     ./tapestry.sh autoscale [-h] [-v] [-M MAX_CPU] [-m MIN_CPU] [-l
+#     MIN_CONTAINERS] [-c COOLDOWN] [-i INTERVAL] [-t TRIGGER] [-n NAME]
+#
+# DESCRIPTION
+#     Monitor the Docker service NAME and scale the number of replicas up or
+#     down based on MIN_CPU and MAX_CPU. If the cpu goes above MAX_CPU or below
+#     MIN_CPU for TRIGGER consecutive checks (spaced INTERVAL seconds apart),
+#     increase or decrease the number of replicas by 1, then sleep for COOLDOWN
+#     seconds. The number of replicas will not go below MIN_CONTAINERS, but if
+#     the number starts below MIN_CONTAINERS, it will only be increased when
+#     the cpu checks occur.
+#
+# OPTIONS
+#
+#     -h
+#         Print this help message
+#
+#     -v
+#         Print commands before executing them
+#
+#     -M MAX_CPU
+#         The maximum total CPU usage in percent of the machine used by the
+#         Docker services (default "10")
+#
+#     -m MIN_CPU
+#         The minimum total CPU usage in percent of the machine used by the
+#         Docker services (default "5")
+#
+#     -l MIN_CONTAINERS
+#         The lower bound on the number of replicas that will be scaled down by
+#         this script (default "1")
+#
+#     -c COOLDOWN
+#         The number of seconds to wait after scaling up or down the number of
+#         replicas (default "5")
+#
+#     -i INTERVAL
+#         The number of seconds to wait between each check (default "2")
+#
+#     -t TRIGGER
+#         The number of consecutive too-high or too-low checks before scaling
+#         the service (default "1")
+#
+#     -n NAME
+#         The name of the service to monitor and autoscale (default "tapestry")
+#
+tapestry-do-autoscale() {
+    local opt_verbose opt_max_cpu opt_min_cpu opt_min_containers opt_cooldown \
+          opt_interval opt_trigger_threshold opt_name opt OPTIND OPTARG \
+          scale_up_counter scale_down_counter cpu replicas lines line IFS parts \
+          ids id containers replicas
+    opt_verbose=
+    opt_max_cpu=1000  # in hundredths of a percent
+    opt_min_cpu=500   # in hundredths of a percent
+    opt_min_containers=1
+    opt_cooldown=5    # in seconds
+    opt_interval=2    # in seconds
+    opt_trigger_threshold=1  # in number of intervals
+    opt_name=tapestry
+    while getopts ":hvM:m:l:c:i:t:n:" opt; do
+        case "$opt" in
+            (h) tapestry-usage -n $LINENO;;
+            (v) opt_verbose=1;;
+            (M) opt_max_cpu=${OPTARG}00;;
+            (m) opt_min_cpu=${OPTARG}00;;
+            (l) opt_min_containers=$OPTARG;;
+            (c) opt_cooldown=$OPTARG;;
+            (i) opt_interval=$OPTARG;;
+            (t) opt_trigger_threshold=$OPTARG;;
+            (n) opt_name=$OPTARG;;
+            (\?) tapestry-usage -n $LINENO -e "Unknown option: -$OPTARG";;
+        esac
+    done
+    shift $(($OPTIND-1))
+
+    scale_up_counter=0
+    scale_down_counter=0
+
+    ${TAPESTRY_DOCKER_SUDO:+sudo} true  # open sudo session if necessary
+
+    printf $'Monitoring %s...\n' "$opt_name"
+
+    while sleep "$opt_interval"; do
+        # Get container IDs for Tapestry nodes
+
+        IFS=$'\n'
+        lines=( $(tapestry-run ${opt_verbose:+-v} \
+                               ${TAPESTRY_DOCKER_SUDO:+sudo} docker service ps \
+                               "$opt_name" --no-resolve) )
+
+        IFS=$' '
+        parts=( ${lines[0]} )
+        [ "${parts[0]}" = ID ] || printf $'Incorrect format: ID\n' >&2
+        [ "${parts[1]}" = NAME ] || printf $'Incorrect format: NAME\n' >&2
+        [ "${parts[2]}" = IMAGE ] || printf $'Incorrect format: IMAGE\n' >&2
+        [ "${parts[3]}" = NODE ] || printf $'Incorrect format: NODE\n' >&2
+        [ "${parts[4]}" = DESIRED ] || printf $'Incorrect format: DESIRED\n' >&2
+        [ "${parts[5]}" = STATE ] || printf $'Incorrect format: STATE\n' >&2
+        [ "${parts[6]}" = CURRENT ] || printf $'Incorrect format: CURRENT\n' >&2
+        [ "${parts[7]}" = STATE ] || printf $'Incorrect format: STATE\n' >&2
+        [ "${parts[8]}" = ERROR ] || printf $'Incorrect format: ERROR\n' >&2
+
+        ids=()
+        for line in "${lines[@]:1:1000}"; do  # skip header line
+            IFS=$' '
+            parts=( $line )
+
+            ids+=( "${parts[0]}" )
+        done
+
+        # Get actual container IDs for Tapestry instances
+
+        IFS=$'\n'
+        lines=( $(tapestry-run ${opt_verbose:+-v} \
+                               ${TAPESTRY_DOCKER_SUDO:+sudo} docker ps \
+                               --no-trunc --format "{{.Names}}\t{{.ID}}") )
+
+        containers=()
+        for line in "${lines[@]}"; do
+            IFS=$'\t'
+            parts=( $line )
+
+            for id in "${ids[@]}"; do
+                case "${parts[0]}" in
+                    ($opt_name.*.$id)
+                        containers+=( "${parts[1]}" )
+                        break
+                        ;;
+                esac
+            done
+        done
+
+        # Get stats for the Tapestry instances
+
+        IFS=$'\n'
+        lines=( $(tapestry-run ${opt_verbose:+-v} \
+                               ${TAPESTRY_DOCKER_SUDO:+sudo} docker stats \
+                               --no-stream "${containers[@]}") )
+
+        IFS=$' '
+        parts=( ${lines[0]} )
+        [ "${parts[0]}" = CONTAINER ] || printf $'Incorrect format: CONTAINER\n' >&2
+        [ "${parts[1]}" = CPU ] || printf $'Incorrect format: CPU\n' >&2
+        [ "${parts[2]}" = % ] || printf $'Incorrect format: %\n' >&2
+        [ "${parts[3]}" = MEM ] || printf $'Incorrect format: MEM\n' >&2
+        [ "${parts[4]}" = USAGE ] || printf $'Incorrect format: USAGE\n' >&2
+        [ "${parts[5]}" = / ] || printf $'Incorrect format: /\n' >&2
+        [ "${parts[6]}" = LIMIT ] || printf $'Incorrect format: LIMIT\n' >&2
+        [ "${parts[7]}" = MEM ] || printf $'Incorrect format: MEM\n' >&2
+        [ "${parts[8]}" = % ] || printf $'Incorrect format: %\n' >&2
+        [ "${parts[9]}" = NET ] || printf $'Incorrect format: NET\n' >&2
+        [ "${parts[10]}" = I/O ] || printf $'Incorrect format: I/O\n' >&2
+        [ "${parts[11]}" = BLOCK ] || printf $'Incorrect format: BLOCK\n' >&2
+        [ "${parts[12]}" = I/O ] || printf $'Incorrect format: I/O\n' >&2
+        [ "${parts[13]}" = PIDS ] || printf $'Incorrect format: PIDS\n' >&2
+
+        cpu=0
+        for line in "${lines[@]:1:1000}"; do  # skip header line
+            IFS=$' '
+            parts=( $line )
+
+            # Parse CPU values and compute with them in units of hundredths of
+            # a percent
+            case "${parts[1]}" in
+                (?.??%)    cpu=$(($cpu + ${parts[1]:0:1}${parts[1]:2:2}));;
+                (??.??%)   cpu=$(($cpu + ${parts[1]:0:2}${parts[1]:3:2}));;
+                (???.??%)  cpu=$(($cpu + ${parts[1]:0:3}${parts[1]:4:2}));;
+                (????.??%) cpu=$(($cpu + ${parts[1]:0:4}${parts[1]:5:2}));;
+                (*) printf $'Bad CPU value from docker: %s\n' "${parts[1]}" >&2;;
+            esac
+        done
+
+        if [ "$cpu" -gt "$opt_max_cpu" ]; then
+            scale_up_counter=$(($scale_up_counter + 1))
+            scale_down_counter=0
+        fi
+
+        if [ "$cpu" -lt "$opt_min_cpu" ]; then
+            scale_down_counter=$(($scale_down_counter + 1))
+            scale_up_counter=0
+        fi
+
+        if [ "$cpu" -gt "$opt_min_cpu" ] && [ "$cpu" -lt "$opt_max_cpu" ]; then
+            scale_up_counter=0
+            scale_down_counter=0
+            continue
+        fi
+
+        # Determine the current number of replicas
+
+        IFS=$'\n'
+        lines=( $(tapestry-run ${opt_verbose:+-v} \
+                               ${TAPESTRY_DOCKER_SUDO:+sudo} docker service ls \
+                               --filter name="$opt_name") )
+
+        IFS=$' '
+        parts=( ${lines[0]} )
+        [ "${parts[0]}" = ID ] || printf $'Incorrect format: ID\n' >&2
+        [ "${parts[1]}" = NAME ] || printf $'Incorrect format: NAME\n' >&2
+        [ "${parts[2]}" = REPLICAS ] || printf $'Incorrect format: REPLICAS\n' >&2
+        [ "${parts[3]}" = IMAGE ] || printf $'Incorrect format: IMAGE\n' >&2
+        [ "${parts[4]}" = COMMAND ] || printf $'Incorrect format: COMMAND\n' >&2
+
+        # Should only get one line, but could have more
+        for line in "${lines[@]:1:1000}"; do  # skip header line
+            IFS=$' '
+            parts=( $line )
+
+            replicas=${parts[2]%%/*}  # i.e. with 3/4, grab the 3 part
+        done
+
+        if [ "$scale_up_counter" -gt "$opt_trigger_threshold" ]; then
+            printf $'[%s] Scaling up to %s\n' "$(date)" "$(($replicas + 1))"
+            tapestry-run ${opt_verbose:+-v} -o /dev/null \
+                         ${TAPESTRY_DOCKER_SUDO:+sudo} docker service scale \
+                         "$opt_name=$(($replicas + 1))"
+            scale_up_counter=0
+            scale_down_counter=0
+            sleep "$opt_cooldown"
+        fi
+
+        if [ "$scale_down_counter" -gt "$opt_trigger_threshold" ] &&
+           [ "$replicas" -gt "$opt_min_containers" ]; then
+            printf $'[%s] Scaling down to %s\n' "$(date)" "$(($replicas - 1))"
+            tapestry-run ${opt_verbose:+-v} -o /dev/null \
+                         ${TAPESTRY_DOCKER_SUDO:+sudo} docker service scale \
+                         "$opt_name=$(($replicas - 1))"
+            scale_up_counter=0
+            scale_down_counter=0
+            sleep "$opt_cooldown"
+        fi
+    done
+}
+
+################################################################################
+# NAME
 #     tapestry-usage
 #
 # SYNOPSIS
@@ -631,6 +870,7 @@ tapestry() {
         (run) tapestry-do-run "$@";;
         (logs) tapestry-do-logs "$@";;
         (examples) tapestry-do-examples "$@";;
+        (autoscale) tapestry-do-autoscale "$@";;
         (*) tapestry-usage -n $LINENO -e "Unknown action: '$action'";;
     esac
 }
