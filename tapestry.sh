@@ -187,11 +187,11 @@ tapestry-download() {
     fi
 
     if hash curl &>/dev/null; then
-        tapestry-run -o "$opt_path" ${opt_verbose:+-v} \
-            curl ${opt_no_progress:+-s} -L "$opt_url"
+        tapestry-run ${opt_verbose:+-v} \
+            curl ${opt_no_progress:+-s} -L "$opt_url" -o "$opt_path"
     elif hash wget &>/dev/null; then
-        tapestry-run -o "$opt_path" ${opt_verbose:+-v} \
-            wget ${opt_no_progress:+-q} -O- "$opt_url"
+        tapestry-run ${opt_verbose:+-v} \
+            wget ${opt_no_progress:+-q} -O "$opt_path" "$opt_url"
     else
         printf $'Cannot download file from web: no valid executables.\n' >&2
         printf $'Please download the following URL and save it at the\n' >&2
