@@ -23,8 +23,6 @@ RUN apt-get update && \
             libc6-dev \
             # Needed By: pbnj for netcdf support
             libnetcdf-c++4-1 libnetcdf-dev libnetcdf-c++4-dev \
-            # Needed By: enchiladas for minifying JavaScript
-            ${minifyjs:+nodejs npm libavahi-compat-libdnssd-dev} \
     && \
     rm -rf /var/lib/apt/lists/*
 
@@ -65,13 +63,24 @@ RUN true && \
     make install && \
     rm -rf /opt/ospray
 
+WORKDIR /opt/node
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl http://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1 && \
+    ./configure && \
+    make install ${build_parallel} && \
+    curl https://www.npmjs.org/install.sh | sh && \
+    apt-get purge curl && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /opt/
 COPY enchiladas /opt/enchiladas
 COPY pbnj /opt/enchiladas/resources/pbnj
 COPY pistache /opt/enchiladas/resources/pistache
 WORKDIR /opt/enchiladas/build
 RUN true && \
-    ${minifyjs:+npm install -g uglify-js@3} ${minifyjs:-true} && \
+    npm --version && \
+    ${minifyjs:+npm install -g uglify-js@3 nan} ${minifyjs:-true} && \
     cmake .. \
           -DCMAKE_CXX_COMPILER=g++ \
           -DCMAKE_C_COMPILER=gcc \
