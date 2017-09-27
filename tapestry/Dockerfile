@@ -1,7 +1,7 @@
 # Creates an Enchiladas container for the Tapestry project.
 # This Dockerfile was originally written by Tanner Hobson (thobson2@vols.utk.edu)
 
-FROM ubuntu:zesty
+FROM ubuntu:xenial
 MAINTAINER Mohammad Raji <mahmadza@vols.utk.edu>
 
 ARG build_parallel
