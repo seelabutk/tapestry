@@ -16,6 +16,7 @@ RUN apt-get update && \
             freeglut3-dev $(: embree ospray : OpenGL requirements) \
             mesa-common-dev $(: embree ospray : OpenGL requirements) \
             libc6-dev $(: enchiladas : pthreads) \
+            libnetcdf-c++4-1 libnetcdf-dev libnetcdf-c++4-dev $(: pbnj : netcdf support) \
     && \
     rm -rf /var/lib/apt/lists/*
 
@@ -65,7 +66,7 @@ RUN true && \
     cmake .. \
           -DCMAKE_CXX_COMPILER=g++ \
           -DCMAKE_C_COMPILER=gcc \
-          -DUSE_NETCDF:BOOL=OFF \
+          -DUSE_NETCDF:BOOL=ON\
           -DBUILD_EXAMPLES:BOOL=OFF \
           -DOSPRAY_INSTALL_DIR=/usr/local/ \
           -Dembree_DIR=/opt/embree \
