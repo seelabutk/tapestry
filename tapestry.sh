@@ -499,17 +499,18 @@ tapestry-do-examples() {
     done
     shift $(($OPTIND-1))
 
-    if ! [ -e examples.tar.gz ]; then
+    if ! [ -e tapestry_examples.tar.gz ]; then
         tapestry-download \
-            -u http://seelab.eecs.utk.edu/tapestry/tapestry_example_dirs.tar.gz \
-            -o examples.tar.gz \
+            -u http://seelab.eecs.utk.edu/tapestry/tapestry_examples.tar.gz \
+            -o tapestry_examples.tar.gz \
             ${opt_verbose:+-v} \
             ${opt_progress:+-p}
     fi
 
-    if ! [ -e tapestry_example_dirs ]; then
+    if ! [ -e examples ]; then
         tapestry-extract \
-            -f examples.tar.gz \
+            -f tapestry_examples.tar.gz \
+            -d examples \
             ${opt_verbose:+-v}
     fi
 }
