@@ -39,13 +39,13 @@ tapestry-run() {
 
     if [ -n "$opt_verbose" ] || [ -n "$TAPESTRY_DRY_RUN" ]; then
         if [ -n "$opt_output" ]; then
-            printf $'RUN:'
-            printf $' %q' "$@"
-            printf $' > %s\n' "$opt_output"
+            printf $'RUN:' >&2
+            printf $' %q' "$@" >&2
+            printf $' > %s\n' "$opt_output" >&2
         else
-            printf $'RUN:'
-            printf $' %q' "$@"
-            printf $'\n'
+            printf $'RUN:' >&2
+            printf $' %q' "$@" >&2
+            printf $'\n' >&2
         fi
     fi
 
@@ -160,7 +160,7 @@ tapestry-download() {
     opt_path=
     opt_verbose=
     opt_no_progress=1
-    while getopts "u:o:hv" opt; do
+    while getopts "u:o:hvp" opt; do
         case "$opt" in
             (h) tapestry-usage -n $LINENO;;
             (u) opt_url=$OPTARG;;
@@ -255,7 +255,8 @@ tapestry-do-depend() {
     has_docker_swarm=1
     if ! ${TAPESTRY_DOCKER_SUDO:+sudo} docker node ls &>/dev/null; then
         printf $'Error: docker swarm not initialized\n' >&2
-        printf $'  Fix: docker swarm init\n\n' >&2
+        printf $'  Fix: %sdocker swarm init\n\n' \
+               "${TAPESTRY_DOCKER_SUDO:+sudo }" >&2
         has_docker_swarm=
     fi
 
@@ -325,11 +326,11 @@ tapestry-do-build() {
     done
     shift $(($OPTIND-1))
 
-    tapestry-run ${TAPESTRY_DOCKER_SUDO:+sudo} ${opt_verbose:+-v} \
-           docker build \
-           ${opt_parallel:+--build-arg build_parallel="-j $opt_parallel"} \
-           ${opt_tag:+-t "$opt_tag"} \
-           tapestry
+    tapestry-run ${opt_verbose:+-v} \
+            ${TAPESTRY_DOCKER_SUDO:+sudo} docker build \
+            ${opt_parallel:+--build-arg build_parallel="-j $opt_parallel"} \
+            ${opt_tag:+-t "$opt_tag"} \
+            tapestry
 }
 
 ################################################################################
@@ -379,7 +380,7 @@ tapestry-do-run() {
     opt_port=8080
     opt_name=tapestry
     opt_tag=tapestry_tapestry
-    while getopts ":c:d:p:n:t:h" opt; do
+    while getopts ":c:d:p:n:t:hv" opt; do
         case "$opt" in
             (h) tapestry-usage -n $LINENO;;
             (v) opt_verbose=1;;
@@ -398,8 +399,8 @@ tapestry-do-run() {
         exit 1
     fi
 
-    tapestry-run ${TAPESTRY_DOCKER_SUDO:+sudo} ${opt_verbose:+-v} \
-        docker service create \
+    tapestry-run ${opt_verbose:+-v} \
+        ${TAPESTRY_DOCKER_SUDO:+sudo} docker service create \
         --replicas 1 \
         --name "$opt_name" \
         --publish "$opt_port":9010/tcp \
