@@ -1,22 +1,28 @@
 # Creates an Enchiladas container for the Tapestry project.
 # This Dockerfile was originally written by Tanner Hobson (thobson2@vols.utk.edu)
 
-FROM ubuntu:latest
+FROM ubuntu:zesty
 MAINTAINER Mohammad Raji <mahmadza@vols.utk.edu>
 
 ARG build_parallel
+ARG minifyjs
 
 RUN apt-get update && \
     apt-get install -y \
-            build-essential $(: all : compile tool) \
-            cmake $(: all : compile tool) \
-            python $(: pistache : running tests) \
-            libtbb-dev $(: embree ospray : threading framework) \
-            libglu1-mesa-dev $(: embree ospray : OpenGL requirements) \
-            freeglut3-dev $(: embree ospray : OpenGL requirements) \
-            mesa-common-dev $(: embree ospray : OpenGL requirements) \
-            libc6-dev $(: enchiladas : pthreads) \
-            libnetcdf-c++4-1 libnetcdf-dev libnetcdf-c++4-dev $(: pbnj : netcdf support) \
+            # Needed By: everything
+            build-essential \
+            # Needed By: everything
+            cmake \
+            # Needed By: pistache for running tests
+            python \
+            # Needed By: embree and ospray for their threading framework
+            libtbb-dev \
+            # Needed By: embree and ospray for OpenGL
+            libglu1-mesa-dev freeglut3-dev mesa-common-dev \
+            # Needed By: enchiladas for pthreads
+            libc6-dev \
+            # Needed By: pbnj for netcdf support
+            libnetcdf-c++4-1 libnetcdf-dev libnetcdf-c++4-dev \
     && \
     rm -rf /var/lib/apt/lists/*
 
@@ -57,12 +63,24 @@ RUN true && \
     make install && \
     rm -rf /opt/ospray
 
+WORKDIR /opt/node
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl http://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1 && \
+    ./configure && \
+    make install ${build_parallel} && \
+    curl https://www.npmjs.org/install.sh | sh && \
+    apt-get purge curl && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /opt/
 COPY enchiladas /opt/enchiladas
 COPY pbnj /opt/enchiladas/resources/pbnj
 COPY pistache /opt/enchiladas/resources/pistache
 WORKDIR /opt/enchiladas/build
 RUN true && \
+    npm --version && \
+    ${minifyjs:+npm install -g uglify-js@3 nan} ${minifyjs:-true} && \
     cmake .. \
           -DCMAKE_CXX_COMPILER=g++ \
           -DCMAKE_C_COMPILER=gcc \
@@ -70,6 +88,7 @@ RUN true && \
           -DBUILD_EXAMPLES:BOOL=OFF \
           -DOSPRAY_INSTALL_DIR=/usr/local/ \
           -Dembree_DIR=/opt/embree \
+          -DENABLE_MINIFY=${minifyjs:+ON}${minifyjs:-OFF} \
     && \
     make ${build_parallel} && \
     make install
