@@ -318,17 +318,22 @@ tapestry-do-depend() {
 #     -t TAG
 #         The tag to save the built image under (default "tapestry_tapestry")
 #
+#     -m
+#         Enable minification of JavaScript code
+#
 tapestry-do-build() {
-    local opt_parallel opt_tag opt_verbose opt OPTIND OPTARG
+    local opt_parallel opt_tag opt_verbose opt_minify opt OPTIND OPTARG
     opt_parallel=
     opt_tag=tapestry_tapestry
     opt_verbose=
-    while getopts ":j:t:hv" opt; do
+    opt_minify=
+    while getopts ":j:t:hvm" opt; do
         case "$opt" in
             (h) tapestry-usage -n $LINENO;;
             (j) opt_parallel=$OPTARG;;
             (t) opt_tag=$OPTARG;;
             (v) opt_verbose=1;;
+            (m) opt_minify=1;;
             (\?) tapestry-usage -n $LINENO -e "unexpected option: -$OPTARG";;
         esac
     done
@@ -337,6 +342,7 @@ tapestry-do-build() {
     tapestry-run ${opt_verbose:+-v} \
             ${TAPESTRY_DOCKER_SUDO:+sudo} docker build \
             ${opt_parallel:+--build-arg build_parallel="-j $opt_parallel"} \
+            ${opt_minify:+--build-arg minifyjs=1} \
             ${opt_tag:+-t "$opt_tag"} \
             tapestry
 }
