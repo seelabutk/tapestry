@@ -23,6 +23,8 @@ RUN apt-get update && \
             libc6-dev \
             # Needed By: pbnj for netcdf support
             libnetcdf-c++4-1 libnetcdf-dev libnetcdf-c++4-dev \
+            # Needed By: enchiladas for minifying JavaScript
+            ${minifyjs:+python-pip} \
     && \
     rm -rf /var/lib/apt/lists/*
 
@@ -63,28 +65,17 @@ RUN true && \
     make install && \
     rm -rf /opt/ospray
 
-WORKDIR /opt/node
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl http://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1 && \
-    ./configure && \
-    make install ${build_parallel} && \
-    curl https://www.npmjs.org/install.sh | sh && \
-    apt-get purge curl && \
-    rm -rf /var/lib/apt/lists/*
-
 WORKDIR /opt/
 COPY enchiladas /opt/enchiladas
 COPY pbnj /opt/enchiladas/resources/pbnj
 COPY pistache /opt/enchiladas/resources/pistache
 WORKDIR /opt/enchiladas/build
 RUN true && \
-    npm --version && \
-    ${minifyjs:+npm install -g uglify-js@3 nan} ${minifyjs:-true} && \
+    pip install rjsmin && \
     cmake .. \
           -DCMAKE_CXX_COMPILER=g++ \
           -DCMAKE_C_COMPILER=gcc \
-          -DUSE_NETCDF:BOOL=ON\
+          -DUSE_NETCDF:BOOL=ON \
           -DBUILD_EXAMPLES:BOOL=OFF \
           -DOSPRAY_INSTALL_DIR=/usr/local/ \
           -Dembree_DIR=/opt/embree \
