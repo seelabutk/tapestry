@@ -6,12 +6,13 @@ Tapestry is a platform for creating lightweight, web-based volume rendering appl
 - Docker (https://www.docker.com/get-docker)
 
 ## Installation
-Running `./build.sh` will build and install the Tapestry Docker image.
+Running `./tapestry.sh build` will build and install the Tapestry Docker image. You can use `-j` to specify the number of processes for building. Use `-m` to minify the Javascript internally.
 
 ## Running the example
-- To run the example, first download the data and the configurations using `./download_example.sh`
-- Second, run `./run.sh tapestry_example_dirs/configs/ tapestry_example_dirs/data`
+- To run the example, first download the data and the configurations using `./tapestry.sh examples`
+- Second, run `./tapestry.sh run -c examples/configs/ -d examples/data`
 - Third, navigate to http://localhost:8080 in your browser
+- `tapestry.sh` provides all of the management scripts needed for building and running. Simply run `./tapestry.sh -h` for more options. 
 
 ## Usage
 To use Tapestry with your own page and datasets, you will need three things:
