@@ -24,7 +24,7 @@ RUN apt-get update && \
             # Needed By: pbnj for netcdf support
             libnetcdf-c++4-1 libnetcdf-dev libnetcdf-c++4-dev \
             # Needed By: enchiladas for minifying JavaScript
-            ${minifyjs:+python-pip} \
+            python-pip \
     && \
     rm -rf /var/lib/apt/lists/*
 
