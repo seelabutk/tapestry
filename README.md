@@ -7,6 +7,7 @@ Tapestry is a platform for creating lightweight, web-based volume rendering appl
 
 ## Installation
 Run `./tapestry.sh depend` to fetch and install the Tapestry submodules. 
+
 Running `./tapestry.sh build` will then build and install the Tapestry Docker image. You can use `-j` to specify the number of processes for building. Use `-m` to minify the Javascript internally.
 
 ## Running the example
@@ -24,6 +25,8 @@ To use Tapestry with your own page and datasets, you will need three things:
 You can provide additional Tapestry options by editing `tapestry/enchiladas/src/js/main.js` after doing an initial build. You would also need to rebuild the image after any edits. 
 
 If you use Tapestry, please cite the paper (http://seelab.eecs.utk.edu/tapestry/tapestry.pdf).
+
+More documentation can be found in the [wiki](https://github.com/seelabutk/tapestry/wiki).
 
 ## License 
 Copyright 2017 University of Tennessee, Knoxville
