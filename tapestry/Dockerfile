@@ -84,4 +84,8 @@ RUN true && \
     make ${build_parallel} && \
     make install
 
-CMD ["./server", "/config", "9010"]
+# Copy dependency installation script 
+COPY install_dependencies.sh /opt/install_dependencies.sh
+RUN /opt/install_dependencies.sh
+
+CMD ["sh", "-c", "./server /config 9010 ${APP_DIR}"]

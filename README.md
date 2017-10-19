@@ -14,7 +14,8 @@ Running `./tapestry.sh build` will then build and install the Tapestry Docker im
 - To run the example, first download the data and the configurations using `./tapestry.sh examples`
 - Second, run `./tapestry.sh run -c examples/configs/ -d examples/data`
 - Third, navigate to http://localhost:8080 in your browser
-- `tapestry.sh` provides all of the management scripts needed for building and running. Simply run `./tapestry.sh -h` for more options. 
+- `tapestry.sh` provides all of the management scripts needed for building and running. Simply run `./tapestry.sh -h` for more options
+- Since Tapestry uses Docker Swarm, to kill the running service, simply run `docker service rm tapestry`
 
 ## Usage
 To use Tapestry with your own page and datasets, you will need three things:

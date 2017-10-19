@@ -386,15 +386,16 @@ tapestry-do-build() {
 #         "tapestry_tapestry")
 #
 tapestry-do-run() {
-    local opt_verbose opt_config opt_data opt_port opt_name opt_tag opt OPTIND \
-          OPTARG
+    local opt_verbose opt_config opt_data opt_port opt_name opt_tag \
+        opt_app_dir opt OPTIND OPTARG
     opt_verbose=
     opt_config=
     opt_data=
     opt_port=8080
     opt_name=tapestry
     opt_tag=tapestry_tapestry
-    while getopts ":c:d:p:n:t:hv" opt; do
+    opt_app_dir=
+    while getopts ":c:d:p:n:t:a:hv" opt; do
         case "$opt" in
             (h) tapestry-usage -n $LINENO;;
             (v) opt_verbose=1;;
@@ -403,6 +404,7 @@ tapestry-do-run() {
             (p) opt_port=$OPTARG;;
             (n) opt_name=$OPTARG;;
             (t) opt_tag=$OPTARG;;
+            (a) opt_app_dir=$OPTARG;;
             (\?) tapestry-usage -n $LINENO -e "unexpected option: -$OPTARG";;
         esac
     done
@@ -420,6 +422,8 @@ tapestry-do-run() {
         --publish "$opt_port":9010/tcp \
         --mount type=bind,src="$opt_config",dst=/config \
         --mount type=bind,src="$opt_data",dst=/data \
+        ${opt_app_dir:+--mount type=bind,src="$opt_app_dir",dst=/app} \
+        ${opt_app_dir:+--env APP_DIR=/app} \
         "$opt_tag"
 }
 
