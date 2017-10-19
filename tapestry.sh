@@ -375,6 +375,9 @@ tapestry-do-build() {
 #     -d DATA
 #         The directory that contains Tapestry data files
 #
+#     -a APP
+#         A directory containing a custom Tapestry application/plugin
+#
 #     -p PORT
 #         The port to access the Tapestry service at (default "8080")
 #
