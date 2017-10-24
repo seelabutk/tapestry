@@ -339,12 +339,76 @@ tapestry-do-build() {
     done
     shift $(($OPTIND-1))
 
+    # create overlay network if doesn't exist
+    tapestry-run ${opt_verbose:+-v}
+        ${TAPESTRY_DOCKER_SUDO:+sudo} docker network ls \
+        | grep -q "tapestry_network"
+
+    
+    if [ $? -eq 1 ]; then
+        tapestry-run ${opt_verbose:+v}
+            ${TAPESTRY_DOCKER_SUDO:+sudo} docker network create \
+            -d overlay tapestry_network
+    fi;
+
     tapestry-run ${opt_verbose:+-v} \
             ${TAPESTRY_DOCKER_SUDO:+sudo} docker build \
             ${opt_parallel:+--build-arg build_parallel="-j $opt_parallel"} \
             ${opt_minify:+--build-arg minifyjs=1} \
             ${opt_tag:+-t "$opt_tag"} \
             tapestry
+
+    tapestry-run ${opt_verbose:+-v} \
+        ${TAPESTRY_DOCKER_SUDO:+sudo} docker build \
+        --file tapestry/Dockerfile.nginx \
+        --tag tapestry_nginx \
+        tapestry
+}
+
+################################################################################
+# NAME
+#     tapestry-do-stop
+#
+# SYNOPSIS
+#     ./tapestry.sh stop [-h] [-v] [-n NAME]
+#
+# DESCRIPTION
+#     Stops the Tapestry service and the NGINX caching service 
+#
+# OPTIONS
+#     -h
+#         Print this help message
+#
+#     -v
+#         Print commands before running them
+#
+#     -n NAME
+#         The name of the Docker service that was assigned (default "tapestry")
+#
+tapestry-do-stop() {
+    local opt_verbose opt_name opt OPTIND OPTARG
+    opt_verbose=
+    opt_name=tapestry
+    while getopts ":n:hv" opt; do
+        case "$opt" in
+            (h) tapestry-usage -n $LINENO;;
+            (v) opt_verbose=1;;
+            (n) opt_name=$OPTARG;;
+            (\?) tapestry-usage -n $LINENO -e "unexpected option: -$OPTARG";;
+        esac
+    done
+    shift $(($OPTIND-1))
+
+    tapestry-run ${opt_verbose:+-v} \
+        ${TAPESTRY_DOCKER_SUDO:+sudo} docker service rm "$opt_name"
+
+    tapestry-run ${opt_verbose:+-v} \
+        ${TAPESTRY_DOCKER_SUDO:+sudo} docker service ls | grep -q tapestry_nginx
+
+    if [ $? -eq 0 ]; then
+        tapestry-run ${opt_verbose:+-v} \
+            ${TAPESTRY_DOCKER_SUDO:+sudo} docker service rm tapestry_nginx
+    fi
 }
 
 ################################################################################
@@ -369,6 +433,9 @@ tapestry-do-build() {
 #     -v
 #         Print commands before running them
 #
+#     -k 
+#         Enable distributed caching
+#
 #     -c CONFIGS
 #         The directory that contains Tapestry configuration files
 #
@@ -390,7 +457,7 @@ tapestry-do-build() {
 #
 tapestry-do-run() {
     local opt_verbose opt_config opt_data opt_port opt_name opt_tag \
-        opt_app_dir opt OPTIND OPTARG
+        opt_app_dir opt_enable_cache opt OPTIND OPTARG
     opt_verbose=
     opt_config=
     opt_data=
@@ -398,7 +465,9 @@ tapestry-do-run() {
     opt_name=tapestry
     opt_tag=tapestry_tapestry
     opt_app_dir=
-    while getopts ":c:d:p:n:t:a:hv" opt; do
+    opt_enable_cache=
+    opt_disable_cache=1
+    while getopts ":c:d:p:n:t:a:hvk" opt; do
         case "$opt" in
             (h) tapestry-usage -n $LINENO;;
             (v) opt_verbose=1;;
@@ -408,6 +477,7 @@ tapestry-do-run() {
             (n) opt_name=$OPTARG;;
             (t) opt_tag=$OPTARG;;
             (a) opt_app_dir=$OPTARG;;
+            (k) opt_enable_cache=1;;
             (\?) tapestry-usage -n $LINENO -e "unexpected option: -$OPTARG";;
         esac
     done
@@ -418,16 +488,31 @@ tapestry-do-run() {
         exit 1
     fi
 
+    if [[ $opt_enable_cache = 1 ]]; then
+        unset opt_disable_cache
+    fi
+
     tapestry-run ${opt_verbose:+-v} \
         ${TAPESTRY_DOCKER_SUDO:+sudo} docker service create \
         --replicas 1 \
         --name "$opt_name" \
-        --publish "$opt_port":9010/tcp \
         --mount type=bind,src="$opt_config",dst=/config \
         --mount type=bind,src="$opt_data",dst=/data \
+        --network tapestry_network \
+        ${opt_disable_cache:+--publish "$opt_port":9010/tcp} \
         ${opt_app_dir:+--mount type=bind,src="$opt_app_dir",dst=/app} \
         ${opt_app_dir:+--env APP_DIR=/app} \
         "$opt_tag"
+
+    if [[ $opt_enable_cache = 1 ]]; then
+        tapestry-run ${opt_verbose:+-v} \
+            ${TAPESTRY_DOCKER_SUDO:+sudo} docker service create \
+            --mode global \
+            --name tapestry_nginx \
+            --publish "$opt_port":80/tcp \
+            --network tapestry_network \
+            tapestry_nginx
+    fi
 }
 
 ################################################################################
@@ -903,6 +988,7 @@ tapestry-usage() {
 #     depend   Download and verify any dependencies for Tapestry
 #     build    Build the Docker image for Tapestry
 #     run      Create and run the Docker service using the built image
+#     stop     Stops all Tapestry-related services
 #     logs     Fetch and print any logs from the Tapestry service
 #
 # OPTIONS
@@ -942,6 +1028,7 @@ tapestry() {
         (depend) tapestry-do-depend "$@";;
         (build) tapestry-do-build "$@";;
         (run) tapestry-do-run "$@";;
+        (stop) tapestry-do-stop "$@";;
         (logs) tapestry-do-logs "$@";;
         (examples) tapestry-do-examples "$@";;
         (autoscale) tapestry-do-autoscale "$@";;
