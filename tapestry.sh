@@ -906,6 +906,25 @@ tapestry-do-scale() {
 
 ################################################################################
 # NAME
+#    tapestry-do-cache-report 
+#
+# SYNOPSIS
+#     ./tapestry.sh cache_report 
+#
+# DESCRIPTION
+#     Gives a report on the cache's hits and misses 
+#
+tapestry-do-cache-report() {
+    local container_id    
+    container_id=$(docker ps | grep tapestry_nginx | awk '{print $1}');
+    docker exec -t $container_id /bin/bash -c "awk '{print $1}' \
+        /var/log/nginx/cache.log \
+        | cut -d '[' -f 1 \
+        | cut -d '-' -f 2 \
+        | sort | uniq -c | sort -r";
+}
+################################################################################
+# NAME
 #     tapestry-usage
 #
 # SYNOPSIS
@@ -985,11 +1004,12 @@ tapestry-usage() {
 #     pertaining to COMMAND.
 #
 # COMMANDS
-#     depend   Download and verify any dependencies for Tapestry
-#     build    Build the Docker image for Tapestry
-#     run      Create and run the Docker service using the built image
-#     stop     Stops all Tapestry-related services
-#     logs     Fetch and print any logs from the Tapestry service
+#     depend        Download and verify any dependencies for Tapestry
+#     build         Build the Docker image for Tapestry
+#     run           Create and run the Docker service using the built image
+#     stop          Stops all Tapestry-related services
+#     logs          Fetch and print any logs from the Tapestry service
+#     cache_report  Gives a report on cache hits and misses
 #
 # OPTIONS
 #     -h
@@ -1033,6 +1053,7 @@ tapestry() {
         (examples) tapestry-do-examples "$@";;
         (autoscale) tapestry-do-autoscale "$@";;
         (scale) tapestry-do-scale "$@";;
+        (cache_report) tapestry-do-cache-report "$@";;
         (*) tapestry-usage -n $LINENO -e "Unknown action: '$action'";;
     esac
 }
