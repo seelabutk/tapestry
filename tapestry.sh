@@ -254,7 +254,7 @@ tapestry-do-depend() {
     has_docker_perm=1
     if ! ${TAPESTRY_DOCKER_SUDO:+sudo} docker ps &>/dev/null; then
         printf $'Error: docker not accessible from current user\n' >&2
-        printf $'  Fix: Rerun command with -s: ./tapestry.sh -s docker\n' >&2
+        printf $'  Fix: Rerun command with -s: ./tapestry.sh -s depend\n' >&2
         printf $'  Alt: sudo gpasswd -a $USER docker && newgrp docker\n' >&2
         printf $' NOTE: https://askubuntu.com/a/477554\n\n' >&2
         has_docker_perm=
@@ -476,7 +476,7 @@ tapestry-do-run() {
             (p) opt_port=$OPTARG;;
             (n) opt_name=$OPTARG;;
             (t) opt_tag=$OPTARG;;
-            (a) opt_app_dir=$OPTARG;;
+            (a) opt_app_dir=$(realpath "$OPTARG");;
             (k) opt_enable_cache=1;;
             (\?) tapestry-usage -n $LINENO -e "unexpected option: -$OPTARG";;
         esac
