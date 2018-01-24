@@ -358,6 +358,11 @@ tapestry-do-build() {
             ${opt_tag:+-t "$opt_tag"} \
             tapestry
 
+    if [ $? -ne 0 ]; then
+        echo "Error: Could not build the image";
+        return 1;
+    fi
+
     tapestry-run ${opt_verbose:+-v} \
         ${TAPESTRY_DOCKER_SUDO:+sudo} docker build \
         --file tapestry/Dockerfile.nginx \
@@ -513,6 +518,57 @@ tapestry-do-run() {
             --network tapestry_network \
             tapestry_nginx
     fi
+}
+
+################################################################################
+# NAME
+#     tapestry-do-shell
+#
+# SYNOPSIS
+#     ./tapestry.sh shell [-h] [-v] [-n NAME]
+#
+# DESCRIPTION
+#     Open a shell in the first container of the service  
+#
+# OPTIONS
+#     -h
+#         Print this help message
+#
+#     -v
+#         Print commands before executing them
+#
+#     -n NAME
+#         The name of the service to check (default "tapestry")
+#
+tapestry-do-shell() {
+    local opt_verbose opt_name opt OPTIND OPTARG IFS lines first id id2
+    opt_verbose=
+    opt_name=tapestry
+    while getopts ":n:hv" opt; do
+        case "$opt" in
+            (h) tapestry-usage -n $LINENO;;
+            (v) opt_verbose=1;;
+            (n) opt_name=$OPTARG;;
+            (\?) tapestry-usage -n $LINENO -e "Unexpected option: -$OPTARG";;
+        esac
+    done
+    shift $(($OPTIND-1))
+
+    IFS=$'\n'
+    lines=( $(tapestry-run ${opt_verbose:+-v} \
+                           ${TAPESTRY_DOCKER_SUDO:+sudo} docker service ps \
+                           "$opt_name") )
+
+    IFS=$' '
+    first=( ${lines[1]} )
+
+    id=${first[0]}
+    id2=$(tapestry-run ${opt_verbose:+-v} \
+                       ${TAPESTRY_DOCKER_SUDO:+sudo} docker inspect \
+                       --format "{{.Status.ContainerStatus.ContainerID}}" "$id")
+
+    tapestry-run ${opt_verbose:+-v} \
+        ${TAPESTRY_DOCKER_SUDO:+sudo} docker exec -it "$id2" /bin/bash
 }
 
 ################################################################################
@@ -1008,6 +1064,7 @@ tapestry-usage() {
 #     build         Build the Docker image for Tapestry
 #     run           Create and run the Docker service using the built image
 #     stop          Stops all Tapestry-related services
+#     shell         Opens a shell in the first container of the service 
 #     logs          Fetch and print any logs from the Tapestry service
 #     cache_report  Gives a report on cache hits and misses
 #
@@ -1050,6 +1107,7 @@ tapestry() {
         (run) tapestry-do-run "$@";;
         (stop) tapestry-do-stop "$@";;
         (logs) tapestry-do-logs "$@";;
+        (shell) tapestry-do-shell "$@";;
         (examples) tapestry-do-examples "$@";;
         (autoscale) tapestry-do-autoscale "$@";;
         (scale) tapestry-do-scale "$@";;
