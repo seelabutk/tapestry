@@ -25,7 +25,17 @@ To use Tapestry with your own page and datasets, you will need three things:
 
 You can provide additional Tapestry options by editing `tapestry/enchiladas/src/js/main.js` after doing an initial build. You would also need to rebuild the image after any edits. 
 
-If you use Tapestry, please cite the paper (http://seelab.eecs.utk.edu/tapestry/tapestry.pdf).
+If you use Tapestry, please cite the paper: 
+
+    @INPROCEEDINGS {Tapestry2017,
+        author    = "M. Raji and A. Hota and J. Huang",
+        title     = "Scalable web-embedded volume rendering",
+        booktitle = "2017 IEEE 7th Symposium on Large Data Analysis and Visualization (LDAV)",
+        year      = "2017",
+        pages     = "45-54",
+        month     = "Oct",
+        doi       = "10.1109/LDAV.2017.8231850"
+    }
 
 More documentation can be found in the [wiki](https://github.com/seelabutk/tapestry/wiki).
 
