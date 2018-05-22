@@ -294,6 +294,14 @@ tapestry-do-depend() {
             ${opt_verbose:+-v} \
             ${opt_progress:+-p}
     fi
+
+    if ! [ -f tapestry/tbb2017_20161128oss_lin.tgz ]; then
+        tapestry-download \
+            -u https://github.com/01org/tbb/releases/download/2017_U3/tbb2017_20161128oss_lin.tgz \
+            -o tapestry/tbb2017_20161128oss_lin.tgz \
+            ${opt_verbose:+-v} \
+            ${opt_progress:+-p}
+    fi
 }
 
 ################################################################################

@@ -40,6 +40,10 @@ RUN true && \
     make install && \
     rm -rf /opt/rapidjson
 
+WORKDIR /opt/
+ADD tbb2017_20161128oss_lin.tgz /opt/
+RUN mv tbb2017_20161128oss tbb
+WORKDIR /opt/tbb/
 
 WORKDIR /opt/
 ADD ispc-v1.9.1-linux.tar.gz /opt/
@@ -55,11 +59,13 @@ WORKDIR /opt/embree/
 WORKDIR /opt/
 COPY ospray /opt/ospray
 WORKDIR /opt/ospray/build
+
 RUN true && \
     cmake .. \
           -Dembree_DIR=/opt/embree \
           -DOSPRAY_ENABLE_APPS:BOOL=OFF \
-          -DOSPRAY_TASKING_SYSTEM=OpenMP \
+          -DTBB_ROOT=/opt/tbb/ \
+          -DOSPRAY_TASKING_SYSTEM=TBB \
     && \
     make ${build_parallel} && \
     make install && \
@@ -78,6 +84,7 @@ RUN true && \
           -DUSE_NETCDF:BOOL=ON \
           -DBUILD_EXAMPLES:BOOL=OFF \
           -DOSPRAY_INSTALL_DIR=/usr/local/ \
+           -DTBB_ROOT=/opt/tbb/ \
           -Dembree_DIR=/opt/embree \
           -DENABLE_MINIFY=${minifyjs:+ON}${minifyjs:-OFF} \
     && \
