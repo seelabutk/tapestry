@@ -1,0 +1,6 @@
+tapestry/*.gz
+tapestry/*.tgz
+conf/
+test_configs/
+examples/
+tapestry_examples.tar.gz
