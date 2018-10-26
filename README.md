@@ -1,5 +1,7 @@
 # Tapestry (Scalable Web-Embedded Volume Rendering)
 
+Powered by [Intel Rendering Framework](https://software.intel.com/en-us/rendering-framework)
+
 Tapestry is a platform for creating lightweight, web-based volume rendering applications at scale, for many users. 
 
 ## Requirements
