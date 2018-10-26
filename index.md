@@ -1,37 +1,43 @@
-## Welcome to GitHub Pages
+# Tapestry (Scientific Visualization as a Microservice)
 
-You can use the [editor on GitHub](https://github.com/seelabutk/tapestry/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Powered by Intel Rendering Framework
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Tapestry is a platform for creating lightweight, web-based volume rendering applications at scale, for many users. 
 
-### Markdown
+## Requirements
+- Docker (https://www.docker.com/get-docker)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Installation
+Run `./tapestry.sh depend` to fetch and install the Tapestry submodules. 
 
-```markdown
-Syntax highlighted code block
+Running `./tapestry.sh build` will then build and install the Tapestry Docker image. You can use `-j` to specify the number of processes for building. Use `-m` to minify the Javascript internally.
 
-# Header 1
-## Header 2
-### Header 3
+## Running the example
+- To run the example, first download the data and the configurations using `./tapestry.sh examples`
+- Second, run `./tapestry.sh run -c examples/configs/ -d examples/data`
+- Third, navigate to http://localhost:8080 in your browser
+- `tapestry.sh` provides all of the management scripts needed for building and running. Simply run `./tapestry.sh -h` for more options
+- Since Tapestry uses Docker Swarm, to kill the running service, simply run `docker service rm tapestry`
 
-- Bulleted
-- List
+## Usage
+To use Tapestry with your own page and datasets, you will need three things:
+1. A directory with your datasets (currently, Tapestry supports raw single variable binary as well as NetCDF files)
+1. A directory with one or more configuration files that point to the data. You can use the provided examples above as a starting point
+1. An `index.html` with hyperimage and optionally, hyperaction tags
 
-1. Numbered
-2. List
+You can provide additional Tapestry options by editing `tapestry/enchiladas/src/js/main.js` after doing an initial build. You would also need to rebuild the image after any edits. 
 
-**Bold** and _Italic_ and `Code` text
+If you use Tapestry, please cite the paper: 
 
-[Link](url) and ![Image](src)
-```
+    @INPROCEEDINGS {Tapestry2017,
+        author    = "M. Raji and A. Hota and J. Huang",
+        title     = "Scalable web-embedded volume rendering",
+        booktitle = "2017 IEEE 7th Symposium on Large Data Analysis and Visualization (LDAV)",
+        year      = "2017",
+        pages     = "45-54",
+        month     = "Oct",
+        doi       = "10.1109/LDAV.2017.8231850"
+    }
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+More documentation can be found in the [wiki](https://github.com/seelabutk/tapestry/wiki).
 
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/seelabutk/tapestry/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
