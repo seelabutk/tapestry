@@ -1,4 +1,4 @@
-# Tapestry (Scalable Web-Embedded Volume Rendering)
+# Tapestry (Scientific Visualization as a Microservice)
 
 Powered by [Intel Rendering Framework](https://software.intel.com/en-us/rendering-framework)
 
