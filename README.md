@@ -27,7 +27,15 @@ To use Tapestry with your own page and datasets, you will need three things:
 
 You can provide additional Tapestry options by editing `tapestry/enchiladas/src/js/main.js` after doing an initial build. You would also need to rebuild the image after any edits. 
 
-If you use Tapestry, please cite the paper: 
+If you use Tapestry, please cite one or both of these two papers: 
+
+    @article{raji2018scientific,
+      title={Scientific Visualization as a Microservice},
+      author={Raji, Mohammad and Hota, Alok and Hobson, Tanner and Huang, Jian},
+      journal={IEEE Transactions on Visualization and Computer Graphics},
+      year={2018},
+      publisher={IEEE}
+    }
 
     @INPROCEEDINGS {Tapestry2017,
         author    = "M. Raji and A. Hota and J. Huang",
