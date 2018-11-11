@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+    <head>
+        <title>Tapestry</title>
+        <link rel="stylesheet" href="css/style.css">
+
+        <!-- jQuery dependency -->
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+        <!-- For testing -->
+        <script src="js/smooth.js"></script>
+        <script src="js/gremlins.min.js"></script>
+        <script src="js/testing.js"></script>
+
+        <script src="js/gif.js"></script>
+
+        <!-- Core Tapestry JS -->
+        <script src="js/tools.js"></script>
+        <script src="js/sylvester.js"></script>
+        <script src="js/math.js"></script>
+        <script src="js/arcball.js"></script>
+        <script src="js/tapestry.js"></script>
+
+        <!-- For minified version -->
+        <!-- <script src="js/tapestry.min.js></script> -->
+        <script>
+            $(document).ready(function(){
+                var width = screen.availWidth;
+                var height = screen.availHeight;
+
+                $(".hyperimage").css({
+                    width: width,
+                    height: height,
+                })
+                $(".hyperimage").tapestry({
+                    n_tiles: 16,
+                    width: height,
+                    height: height,
+                    zoom: 2000,
+                });
+
+                // Listen to slider events and change the 
+                // isosurface threshold accordingly
+                $(".threshold-slider").on("input", function(){
+                    $(".hyperimage").eq(1).data("tapestry")
+                        .settings.isovalues=[parseInt($(this).val())];
+                    $(".hyperimage").eq(1).data("tapestry").render(0);
+                });
+            });
+        </script>
+    </head>
+    <body style="background: #000000;">
+        <div class="hyperimage" id="teapot" data-dataset="turbine" data-colormap="Greys" data-isovalues="0.0009"></div>
+    </body>
+</html>
+

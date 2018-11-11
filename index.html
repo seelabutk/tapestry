@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+    <head>
+        <title>Tapestry</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/modal-video.min.css">
+
+        <!-- jQuery dependency -->
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script src="js/jquery-modal-video.min.js"></script>
+
+        <!-- For testing -->
+        <script src="js/smooth.js"></script>
+        <script src="js/gremlins.min.js"></script>
+        <script src="js/testing.js"></script>
+
+        <script src="js/gif.js"></script>
+
+        <!-- Core Tapestry JS -->
+        <script src="js/tools.js"></script>
+        <script src="js/sylvester.js"></script>
+        <script src="js/math.js"></script>
+        <script src="js/arcball.js"></script>
+        <script src="js/tapestry.js"></script>
+
+        <style>
+			/* Add a black background color to the top navigation */
+			.topnav {
+				/*background: linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(0,0,0,1) 100%);*/
+                background: url('http://dragonfli.es/patternreader/backgrounds/31.png');
+				overflow: hidden;
+				position: absolute;
+				width: 100%;
+				height: 50px;
+				top: 0;
+				left: 0;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                text-align: center;
+                border-bottom: 1px solid rgba(44, 113, 191, 0.63);
+			}
+
+            .topnav li
+            {
+                display: inline;
+            }
+			/* Style the links inside the navigation bar */
+			.topnav a {
+                display:inline-block;
+				color: #eee;
+				padding: 14px 16px;
+				text-decoration: none;
+				font-size: 17px;
+				font-family: helvetica, tahoma, arial;
+			}
+
+			/* Change the color of links on hover */
+			.topnav a:hover {
+				color: #FDF151;
+			}
+
+			/* Add a color to the active/current link */
+			.topnav a.active {
+                color: #E1455D;
+			} 
+
+            .wrapper
+            {
+                position: absolute;
+                top: 50px;
+                width: 100%;
+            }
+
+            .footer
+            {
+                width: 300px;
+                position: relative;
+                margin: 0 auto;
+                background-color: #2C71BF;
+                color: white;
+                font-family: helvetica, tahoma, arial;
+                font-size: 13px;
+                padding: 5px;
+                border-radius: 0 0 5px 5px;
+            }
+            
+            .js-modal-btn
+            {
+                cursor: pointer;
+            }
+
+            .text
+            {
+                font-family: helvetica, tahoma, arial; 
+                color: #eee;
+                font-size: 30px;
+                width: 50%;
+                margin-top: 100px;
+                text-align: left;
+                padding: 30px 10px;
+                margin-left: 30px;
+                border-left: 10px solid #E1455D;
+            }
+
+            img {
+                width: 100%;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                -webkit-clip-path: polygon(0 50%, 0 100%, 100% 100%, 100% 15%);
+                z-index: -1;
+                opacity: 0.9;
+            }
+
+        </style>
+        <!-- For minified version -->
+        <!-- <script src="js/tapestry.min.js></script> -->
+        <script>
+            $(document).ready(function(){
+                var width = screen.availWidth;
+                var height = screen.availHeight;
+
+                $(".hyperimage").css({
+                    width: width,
+                    height: height,
+                })
+                $(".hyperimage").tapestry({
+                    n_tiles: 16,
+                    width: height,
+                    height: height,
+                    zoom: 2000,
+                });
+
+                // Listen to slider events and change the 
+                // isosurface threshold accordingly
+                $(".threshold-slider").on("input", function(){
+                    $(".hyperimage").eq(1).data("tapestry")
+                        .settings.isovalues=[parseInt($(this).val())];
+                    $(".hyperimage").eq(1).data("tapestry").render(0);
+                });
+                $(".js-modal-btn").modalVideo();
+            });
+        </script>
+    </head>
+    <body style="background: #1b1b1b;">
+        <ul class="topnav">
+            <li><a class="active" href="index.html">About</a></li>
+            <li><a href="demo.html">Demo</a></li>
+            <li><a class="js-modal-btn" data-video-id="khHgYXTix18">Video</a></li>
+            <li><a href="https://github.com/seelabutk/tapestry">Github</a></li>
+        </ul>
+        <div class="wrapper">
+            <div class="footer">Powered by <a>Intel&reg; Rendering Framework</a></div>
+        </div>
+        <div class="text">
+            <p>
+            Tapestry is an open source, microservice, platform for making scientific visualization more accessible throughout the web ecosystem
+            <!--Tapestry provides a stateless architecture in order to support many users. The platform can be deployed on Amazon's AWS, institutional clusters, and standalone machines using Docker. For more information, please check the publications and github link. -->
+            </p>
+        </div>
+        <img src="teaser.jpg">
+    </body>
+</html>
+
