@@ -103,10 +103,11 @@
                 })
                 $(".hyperimage").tapestry({
                     host: 'http://accona.eecs.utk.edu:8010/',
-                    n_tiles: 16,
+                    n_tiles: 4,
                     width: height,
                     height: height,
-                    zoom: 2000,
+                    low_res: 128,
+                    zoom: 3000,
                 });
 
                 // Listen to slider events and change the 
@@ -127,6 +128,13 @@
             <li><a class="js-modal-btn" data-video-id="khHgYXTix18">Video</a></li>
             <li><a href="https://github.com/seelabutk/tapestry">Github</a></li>
         </ul>
+        <div class="info-text">
+            <p>
+            This hyperimage shows an interactive render of a scanned 3D-printed turbine blade courtesy of the <a href="https://www.ornl.gov/facility/sns">Oak Ridge National Laboratory's SNS group</a>
+            <br>
+            The size of the dataset is 7.5GB and is being rendered on the fly using Tapestry
+            </p>
+        </div>
         <div class="hyperimage" data-dataset="turbine" data-colormap="Greys" data-isovalues="0.0009">
             Oops. Looks like our servers are down. Send us an email at seelab AT eecs.utk.edu.
         </div>

@@ -15,3 +15,108 @@ html, body
     width: 150px;
     height: 150px;
 }
+
+/* Add a black background color to the top navigation */
+.topnav {
+    /*background: linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(0,0,0,1) 100%);*/
+    background: url('bg.png');
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    left: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(44, 113, 191, 0.63);
+}
+
+.topnav li
+{
+    display: inline;
+}
+/* Style the links inside the navigation bar */
+.topnav a {
+    display:inline-block;
+    color: #eee;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    font-family: helvetica, tahoma, arial;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    color: #FDF151;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+    color: #E1455D;
+} 
+
+.wrapper
+{
+    position: absolute;
+    top: 50px;
+    width: 100%;
+}
+
+.footer
+{
+    width: 300px;
+    position: relative;
+    margin: 0 auto;
+    background-color: #2C71BF;
+    color: white;
+    font-family: helvetica, tahoma, arial;
+    font-size: 13px;
+    padding: 5px;
+    border-radius: 0 0 5px 5px;
+}
+
+.js-modal-btn
+{
+    cursor: pointer;
+}
+
+.text
+{
+    font-family: helvetica, tahoma, arial; 
+    color: #eee;
+    font-size: 30px;
+    width: 50%;
+    margin-top: 100px;
+    text-align: left;
+    padding: 30px 10px;
+    margin-left: 30px;
+    border-left: 10px solid #E1455D;
+}
+
+.teaser-img {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    -webkit-clip-path: polygon(0 50%, 0 100%, 100% 100%, 100% 15%);
+    z-index: -1;
+    opacity: 0.9;
+}
+
+.info-text
+{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-family: helvetica, tahoma, arial; 
+    color: #eee;
+    font-size: 14px;
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: 0.6;
+    border-radius: 3px;
+    padding: 10px;
+    margin: 0 auto;
+    text-align: left;
+}
