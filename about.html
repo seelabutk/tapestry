@@ -34,12 +34,10 @@
                     height: height,
                 })
                 $(".hyperimage").tapestry({
-                    host: 'http://accona.eecs.utk.edu:8010/',
-                    n_tiles: 4,
+                    n_tiles: 16,
                     width: height,
                     height: height,
-                    low_res: 256,
-                    zoom: 3000,
+                    zoom: 2000,
                 });
 
                 // Listen to slider events and change the 
@@ -56,22 +54,19 @@
     <body style="background: #1b1b1b;">
         <div class="logo"><span class="t">T</span><span class="rest">apestry</span></div>
         <ul class="topnav">
-            <li><a href="about.html">About</a></li>
-            <li><a class="active" href="index.html">Demo</a></li>
+            <li><a class="active" href="about.html">About</a></li>
+            <li><a href="index.html">Demo</a></li>
             <li><a class="js-modal-btn" data-video-id="khHgYXTix18">Video</a></li>
             <li><a href="https://github.com/seelabutk/tapestry">Github</a></li>
             <li><a href="https://ieeexplore.ieee.org/document/8523628">Publication</a></li>
         </ul>
-        <div class="info-text">
+        <div class="text">
             <p>
-            This hyperimage shows an interactive render of a scanned 3D-printed turbine blade courtesy of the <a href="https://www.ornl.gov/facility/sns">Oak Ridge National Laboratory's SNS group</a>
-            <br>
-            The size of the dataset is 7.5GB and is being rendered on the fly using Tapestry
+            Tapestry is an open source, microservice, platform for making scientific visualization more accessible throughout the web ecosystem
+            <!--Tapestry provides a stateless architecture in order to support many users. The platform can be deployed on Amazon's AWS, institutional clusters, and standalone machines using Docker. For more information, please check the publications and github link. -->
             </p>
         </div>
-        <div class="hyperimage" data-dataset="turbine" data-colormap="Greys" data-isovalues="0.0009">
-            Oops. Looks like our servers are down. Send us an email at seelab AT eecs.utk.edu.
-        </div>
+        <img class="teaser-img" src="teaser.jpg">
         <div class="wrapper">
             <div class="footer">Powered by <a>Intel&reg; Rendering Framework</a></div>
         </div>

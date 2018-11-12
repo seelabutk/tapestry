@@ -30,7 +30,7 @@ html, body
     padding: 0;
     margin: 0;
     text-align: center;
-    border-bottom: 1px solid rgba(44, 113, 191, 0.63);
+    border-bottom: 1px solid rgb(82, 72, 72);
 }
 
 .topnav li
@@ -60,21 +60,23 @@ html, body
 .wrapper
 {
     position: absolute;
-    top: 50px;
-    width: 100%;
+    top: 12px;
+    width: 350px;
+    right: 10px;
 }
 
 .footer
 {
     width: 300px;
     position: relative;
-    margin: 0 auto;
     background-color: #2C71BF;
     color: white;
     font-family: helvetica, tahoma, arial;
     font-size: 13px;
     padding: 5px;
-    border-radius: 0 0 5px 5px;
+    border-radius: 5px;
+	float: right;
+	margin-right: 10px;
 }
 
 .js-modal-btn
@@ -119,4 +121,35 @@ html, body
     padding: 10px;
     margin: 0 auto;
     text-align: left;
+}
+
+.logo{
+    position: absolute;
+    top: 10px;
+    font-family: arial;
+    color: #eee;
+    padding: 8px;
+    float: left;
+    margin-left: 10px;
+    margin-top: -4px;
+    font-weight: 600;
+    font-size: 25px;
+}
+
+.logo span.t
+{
+    text-shadow:
+    -1px -1px 0px rgb(0, 0, 0),
+    -2px -2px 0px rgb(255, 255, 255),
+    -3px -3px 0px rgb(0, 0, 0),
+    -4px -4px 0px rgb(255, 255, 255),
+    -5px -5px 0px rgb(0, 0, 0),
+    -6px -6px 0px rgb(255, 255, 255);
+    transform: skewY(-15deg);
+    display: inline-block;
+}
+
+.logo span.rest
+{
+    display: inline-block;
 }
