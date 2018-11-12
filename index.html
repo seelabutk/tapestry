@@ -33,14 +33,29 @@
                     width: width,
                     height: height,
                 })
+
+				var tapestry_server = 'http://accona.eecs.utk.edu:8010/';
                 $(".hyperimage").tapestry({
-                    host: 'http://accona.eecs.utk.edu:8010/',
+                    host: tapestry_server,
                     n_tiles: 4,
                     width: height,
                     height: height,
                     low_res: 256,
                     zoom: 3000,
+                    error_callback: function(){
+                        $(".tapestry-tile-base").html('<span class="error">Oops, looks like our servers are off. Send us an email at seelab AT eecs.utk.edu</span>');
+                        $(".tapestry-tile-base").css({
+                            background: "url('turbine_image.png')",
+                            backgroundSize: '70%',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            paddingTop: '60px',
+                            fontFamily: 'arial',
+                            color: 'white',
+                        });
+                    }
                 });
+
 
                 // Listen to slider events and change the 
                 // isosurface threshold accordingly

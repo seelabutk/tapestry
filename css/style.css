@@ -19,7 +19,6 @@ html, body
 /* Add a black background color to the top navigation */
 .topnav {
     /*background: linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(0,0,0,1) 100%);*/
-    background: url('bg.png');
     overflow: hidden;
     position: absolute;
     width: 100%;
@@ -31,6 +30,8 @@ html, body
     margin: 0;
     text-align: center;
     border-bottom: 1px solid rgb(82, 72, 72);
+    background-color: #131313;
+    z-index: 0;
 }
 
 .topnav li
@@ -99,8 +100,9 @@ html, body
 
 .teaser-img {
     width: 100%;
+    height: 100%;
     position: absolute;
-    bottom: 0;
+    top: 50px;
     left: 0;
     -webkit-clip-path: polygon(0 50%, 0 100%, 100% 100%, 100% 15%);
     z-index: -1;
@@ -125,7 +127,7 @@ html, body
 
 .logo{
     position: absolute;
-    top: 10px;
+    top: 8px;
     font-family: arial;
     color: #eee;
     padding: 8px;
@@ -134,6 +136,7 @@ html, body
     margin-top: -4px;
     font-weight: 600;
     font-size: 25px;
+    z-index: 2;
 }
 
 .logo span.t
@@ -153,3 +156,46 @@ html, body
 {
     display: inline-block;
 }
+
+.error
+{
+    background-color: red;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: portrait) { 
+
+	.teaser-img
+    {
+        height: auto;
+        top: 200px;
+    }
+    .wrapper
+    {
+        top: 70px;
+    }
+}
+
+/* Portrait */
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 568px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (orientation: portrait) {
+	.teaser-img
+    {
+        height: auto;
+        top: 200px;
+    }
+    .wrapper
+    {
+        top: 70px;
+    }
+}
+

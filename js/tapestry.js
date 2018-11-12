@@ -359,43 +359,43 @@
         {
             remote_call = false;
         }
-        
+
         if (!window._requests) {
-        	window._requests = new Set();
+            window._requests = new Set();
         }
-        
+
         if (imagesize !== 0 && window._requests.size) {
-        	return;
+            return;
         }
 
         var n_tiles = this.settings.n_tiles;
         var n_cols = Math.sqrt(n_tiles);
         var width = this.settings.width;
 
-	var tiles = new Array(n_tiles).fill(0).map(function(d, i) { return i; });
-	if (false && imagesize !== 0) {
-	    tiles = tiles.filter(function(d, i) {
-	        const x = i % n_cols - (n_cols/2|0) + 0.5,
-	              y = (i / n_cols|0) - (n_cols/2|0) + 0.5,
-		      dist = Math.hypot(x, y) / Math.hypot(n_cols/2-0.5, n_cols/2-0.5);
-	        return dist < 0.5;
-	    });
-	}
-	if (false) {
-	    tiles = tiles.filter(function(d, i) {
-	        const x = i % n_cols - (n_cols/2|0) + 0.5,
-	              y = (i / n_cols|0) - (n_cols/2|0) + 0.5,
-		      dist = Math.hypot(x, y) / Math.hypot(n_cols/2-0.5, n_cols/2-0.5);
-	        return Math.abs(y) < 0.15 * n_cols;
-	    });
-	}
-	var seed = new Array(n_tiles).fill(0).map(function(d, i, arr) {
-	    const x = i % n_cols - (n_cols/2|0) + 0.5,
-	          y = (i / n_cols|0) - (n_cols/2|0) + 0.5,
-		  dist = Math.hypot(x, y) / Math.hypot(n_cols/2-0.5, n_cols/2-0.5);
-	    return dist;
+        var tiles = new Array(n_tiles).fill(0).map(function(d, i) { return i; });
+        if (false && imagesize !== 0) {
+            tiles = tiles.filter(function(d, i) {
+                const x = i % n_cols - (n_cols/2|0) + 0.5,
+                y = (i / n_cols|0) - (n_cols/2|0) + 0.5,
+                dist = Math.hypot(x, y) / Math.hypot(n_cols/2-0.5, n_cols/2-0.5);
+                return dist < 0.5;
+            });
+        }
+        if (false) {
+            tiles = tiles.filter(function(d, i) {
+                const x = i % n_cols - (n_cols/2|0) + 0.5,
+                y = (i / n_cols|0) - (n_cols/2|0) + 0.5,
+                dist = Math.hypot(x, y) / Math.hypot(n_cols/2-0.5, n_cols/2-0.5);
+                return Math.abs(y) < 0.15 * n_cols;
+            });
+        }
+        var seed = new Array(n_tiles).fill(0).map(function(d, i, arr) {
+            const x = i % n_cols - (n_cols/2|0) + 0.5,
+            y = (i / n_cols|0) - (n_cols/2|0) + 0.5,
+            dist = Math.hypot(x, y) / Math.hypot(n_cols/2-0.5, n_cols/2-0.5);
+            return dist;
         });
-	tiles.sort(function(a, b) { return seed[a] - seed[b]; });
+        tiles.sort(function(a, b) { return seed[a] - seed[b]; });
 
         var requests = [];
         for (let i of tiles)
@@ -408,13 +408,13 @@
             // store timings in the log
             this.timelog[path.slice(path.indexOf("/image/"))] = [Date.now(), imagesize, false, 0];
 
-	    const timeoutId = setTimeout(function() {
-	        console.log('timeout');
-	        //window._requests.delete(img);
-	    }, 1000);
-	    
-	    img.onload = function(ev) {
-	        clearTimeout(timeoutId);
+            const timeoutId = setTimeout(function() {
+                console.log('timeout');
+                //window._requests.delete(img);
+            }, 1000);
+
+            img.onload = function(ev) {
+                clearTimeout(timeoutId);
                 var image_path = ev.target.src.slice(
                         ev.target.src.indexOf("/image/"));
 
@@ -425,15 +425,16 @@
                     self.timelog[image_path][3] = Date.now();
                     self.timelog[image_path][2] = tile.attr("src") === ev.target.src;
                 }
-                
+
                 window._requests.delete(ev.target);
             }
+            img.onerror = self.settings.error_callback;
             img.src = path;
 
-                var tile = $(this.element)
-                    .find("#tapestry-tile-" + i).eq(0);
+            var tile = $(this.element)
+                .find("#tapestry-tile-" + i).eq(0);
             tile.attr("src", path);
-               
+
             window._requests.add(img);
         }
 
@@ -822,6 +823,7 @@
         do_isosurface: false,
         isovalues: [0], 
         filters: [],
+        error_callback: function(){},
         camera_link_status: 0 // 0: Not linked, 1: Waiting to be linked, 2: Linked
     };
 
