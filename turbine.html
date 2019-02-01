@@ -1,6 +1,7 @@
 <!DOCTYPE html>
     <head>
         <title>Tapestry</title>
+	<script src="/constants.js"></script>
         <link rel="stylesheet" href="css/style.css">
 
         <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -42,6 +43,7 @@
                     height: height,
                 })
                 $(".hyperimage").tapestry({
+		    host: TAPESTRY_HOST,
                     n_tiles: 16,
                     width: height,
                     height: height,

@@ -1,0 +1,42 @@
+window.USE_AWS = true;
+
+function _TOGGLE() {
+	window.USE_AWS = !window.USE_AWS;
+	$('.hyperimage').each(function(i, d) {
+		$(d).data('tapestry').settings.host = _TAPESTRY_HOST();
+	});
+}
+
+function _TAPESTRY_HOST() {
+	return window.USE_AWS
+		? 'http://tapestry-load-balancer-501972691.us-east-2.elb.amazonaws.com:9010'
+		: 'http://accona.eecs.utk.edu:8010';
+}
+
+window.TAPESTRY_HOST = _TAPESTRY_HOST();
+
+document.addEventListener('DOMContentLoaded', function() {
+	if (('' + window.location).includes('/extra/')) {
+		const div = document.createElement('div');
+		div.style.position = 'fixed';
+		div.style.top = 0;
+		div.style.left = '50%';
+		div.style.background = '#aca';
+		div.style.zIndex = 10000;
+		div.style.padding = '1em';
+		div.style.borderRadius = '0em 0em 1em 1em';
+		div.style.cursor = 'pointer';
+		function _TEXT() {
+			return document.createTextNode('Tapestry images served by ' + (USE_AWS ? 'AWS' : 'Seelab Cloud'));
+		}
+		let text = _TEXT();
+		div.appendChild(text);
+		document.body.appendChild(div);
+		div.addEventListener('click', function() {
+			_TOGGLE();
+			const newText = _TEXT();
+			div.replaceChild(newText, text);
+			text = newText;
+		});
+	}
+});

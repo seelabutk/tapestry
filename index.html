@@ -1,6 +1,7 @@
 <!DOCTYPE html>
     <head>
         <title>Tapestry</title>
+	<script src="/constants.js"></script>
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/modal-video.min.css">
 
@@ -44,8 +45,8 @@
                     height: height,
                 })
 
-				var tapestry_server = 'http://accona.eecs.utk.edu:8010/';
-                $(".hyperimage").tapestry({
+		var tapestry_server = TAPESTRY_HOST;
+		$(".hyperimage").tapestry({
                     host: tapestry_server,
                     n_tiles: 4,
                     width: height,
@@ -83,7 +84,7 @@
         <ul class="topnav">
             <li><a href="about.html">About</a></li>
             <li><a class="active" href="index.html">Demo</a></li>
-            <li><a href="extra.html">Extra Demos</a></li>
+            <li><a href="extra.html">Use Cases</a></li>
             <li><a class="js-modal-btn" data-video-id="khHgYXTix18">Video</a></li>
             <li><a href="https://github.com/seelabutk/tapestry">Github</a></li>
             <li><a href="https://ieeexplore.ieee.org/document/8523628">Publication</a></li>
