@@ -16,18 +16,21 @@ function _TAPESTRY_HOST() {
 window.TAPESTRY_HOST = _TAPESTRY_HOST();
 
 document.addEventListener('DOMContentLoaded', function() {
-	if (('' + window.location).includes('/extra/')) {
+	const extra = ('' + window.location).includes('/extra/') ;
+	const index = ('' + window.location).includes('index.html');
+	if (extra || index) {
 		const div = document.createElement('div');
 		div.style.position = 'fixed';
-		div.style.top = 0;
-		div.style.left = '50%';
+		if (extra) div.style.top = 0;
+		if (index) div.style.top = '50px';
+		div.style.left = '40%';
 		div.style.background = '#aca';
 		div.style.zIndex = 10000;
 		div.style.padding = '1em';
 		div.style.borderRadius = '0em 0em 1em 1em';
 		div.style.cursor = 'pointer';
 		function _TEXT() {
-			return document.createTextNode('Tapestry images served by ' + (USE_AWS ? 'AWS' : 'Seelab Cloud'));
+			return document.createTextNode('Tapestry served by ' + (USE_AWS ? 'AWS' : 'Seelab Cloud'));
 		}
 		let text = _TEXT();
 		div.appendChild(text);

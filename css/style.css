@@ -70,13 +70,13 @@ html, body
 {
     position: absolute;
     top: 12px;
-    width: 350px;
+    width: 300px;
     right: 10px;
 }
 
 .footer
 {
-    width: 300px;
+    width: 250px;
     position: relative;
     background-color: #2C71BF;
     color: white;
@@ -104,6 +104,10 @@ html, body
     padding: 30px 10px;
     margin-left: 30px;
     border-left: 10px solid #E1455D;
+}
+
+.text.text--smaller {
+	font-size: 25px;
 }
 
 .teaser-img {
