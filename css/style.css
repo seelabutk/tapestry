@@ -58,6 +58,14 @@ html, body
     color: #E1455D;
 } 
 
+.text a {
+	color: #eee;
+}
+
+.text a:hover {
+	color: #FDF151;
+}
+
 .wrapper
 {
     position: absolute;

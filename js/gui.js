@@ -1,3 +1,5 @@
+host = 'http://accona.eecs.utk.edu:8010';
+
 sortable = null;
 SettingsController = null;
 settings = null;
@@ -89,6 +91,7 @@ $(document).ready(function(){
             new_frame.append(hyperimage);
             sortable.el.appendChild(new_frame.get(0));
             var hyperimage_obj = $(hyperimage).tapestry({
+	        host: host,
                 width: 100, 
                 height: 100,    
                 n_timesteps: GUI.timesteps
@@ -160,7 +163,7 @@ $(document).ready(function(){
             var n_images = (n_frames - 1) * 50;
             $.ajax({
                 method: "GET",
-                url: "/extern/render_animation/" + n_images.toString(),
+                url: host + "/extern/render_animation/" + n_images.toString(),
                 success: function(path){
                     if (path.indexOf("not ready") != -1)
                     {
@@ -492,7 +495,7 @@ $(document).ready(function(){
         var dataset = $(".main-hyperimage").attr("data-dataset");
         $.ajax({
             method: 'GET',
-            url: "/extern/getconfig/" + dataset,
+            url: host + "/extern/getconfig/" + dataset,
             success: function(result)
             {
                 var configs = JSON.parse(result);
@@ -588,7 +591,7 @@ $(document).ready(function(){
     // Populate the datasets dropdown
     $.ajax({
         method: "GET",
-        url: "/extern/getdatasets",
+        url: host + "/extern/getdatasets",
         success: function(datasets)
         {
             GUI.datasets = JSON.parse(datasets);
@@ -601,6 +604,7 @@ $(document).ready(function(){
             GUI.timesteps = GUI.datasets[0].timesteps;
             $(".main-hyperimage").attr("data-timerange", "0.." + (GUI.timesteps - 1).toString());
             $(".hyperimage").tapestry({
+	        host: host,
                 n_timesteps: GUI.timesteps,
                 width: 700,
                 height: 700,
