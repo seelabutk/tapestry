@@ -13,11 +13,11 @@ Run `./tapestry.sh depend` to fetch and install the Tapestry submodules.
 Running `./tapestry.sh build` will then build and install the Tapestry Docker image. You can use `-j` to specify the number of processes for building. Use `-m` to minify the Javascript internally.
 
 ## Running the example
-- To run the example, first download the data and the configurations using `./tapestry.sh examples`
-- Second, run `./tapestry.sh run -c examples/configs/ -d examples/data`
-- Third, navigate to http://localhost:8080 in your browser
-- `tapestry.sh` provides all of the management scripts needed for building and running. Simply run `./tapestry.sh -h` for more options
-- Since Tapestry uses Docker Swarm, to kill the running service, simply run `docker service rm tapestry`
+- To run the example, first download the data, the configurations, and the example app using `./tapestry.sh examples`
+- Second, run `./tapestry.sh run -c examples/configs/ -d examples/data -a examples/app`
+- Third, navigate to http://127.0.0.1:8080 in your browser
+- `tapestry.sh` provides all of the management scripts needed for building and running. Run `./tapestry.sh -h` for more options
+- Since Tapestry uses Docker Swarm, to kill the running service, run `docker service rm tapestry`
 
 ## Usage
 To use Tapestry with your own page and datasets, you will need three things:
