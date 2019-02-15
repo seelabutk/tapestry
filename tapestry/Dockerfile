@@ -25,6 +25,8 @@ RUN apt-get update && \
             libnetcdf-c++4-1 libnetcdf-dev libnetcdf-c++4-dev \
             # Needed By: enchiladas for minifying JavaScript
             python-pip \
+            # Needed By: tapestry studio for exporting to mp4
+            ffmpeg \
     && \
     rm -rf /var/lib/apt/lists/*
 
