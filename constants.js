@@ -1,4 +1,4 @@
-window.USE_AWS = false;
+window.USE_AWS = true;
 
 function _TOGGLE() {
 	window.USE_AWS = !window.USE_AWS;
