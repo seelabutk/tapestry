@@ -26,7 +26,9 @@ RUN apt-get update && \
             # Needed By: enchiladas for minifying JavaScript
             python-pip \
             # Needed By: tapestry studio for exporting to mp4
-            ffmpeg \
+            # ffmpeg \
+            git \
+            yasm \
     && \
     rm -rf /var/lib/apt/lists/*
 
@@ -72,6 +74,24 @@ RUN true && \
     make ${build_parallel} && \
     make install && \
     rm -rf /opt/ospray
+
+# Install SVT-HEVC for tapestry-gui
+WORKDIR /opt
+RUN true && \
+    git clone https://github.com/intel/SVT-HEVC && \
+    cd SVT-HEVC && mkdir build && cd build && cmake .. && make -j `nproc` && make install
+
+WORKDIR /opt
+RUN true && \
+    git clone https://github.com/FFmpeg/FFmpeg ffmpeg
+
+WORKDIR /opt/ffmpeg/
+RUN git checkout release/4.1 && \
+    git apply ../SVT-HEVC/ffmpeg_plugin/0001-lavc-svt_hevc-add-libsvt-hevc-encoder-wrapper.patch && \
+    git apply ../SVT-HEVC/ffmpeg_plugin/0002-doc-Add-libsvt_hevc-encoder-docs.patch && \
+    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib && \
+    export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig && \
+    ./configure --enable-libsvthevc && make -j `nproc` && make install 
 
 WORKDIR /opt/
 COPY enchiladas /opt/enchiladas
