@@ -45,19 +45,19 @@ RUN true && \
     rm -rf /opt/rapidjson
 
 WORKDIR /opt/
-ADD tbb2017_20161128oss_lin.tgz /opt/
-RUN mv tbb2017_20161128oss tbb
+ADD tbb2019_20190320oss_lin.tgz /opt/
+RUN mv tbb2019_20190320oss tbb
 WORKDIR /opt/tbb/
 
 WORKDIR /opt/
-ADD ispc-v1.9.1-linux.tar.gz /opt/
-RUN mv ispc-v1.9.1-linux ispc
+ADD ispc-v1.10.0-linux.tar.gz /opt/
+RUN mv ispc-1.10.0-Linux ispc
 WORKDIR /opt/ispc/
-RUN update-alternatives --install /usr/bin/ispc ispc /opt/ispc/ispc 1
+RUN update-alternatives --install /usr/bin/ispc ispc /opt/ispc/bin/ispc 1
 
 WORKDIR /opt/
-ADD embree-2.16.4.x86_64.linux.tar.gz /opt/
-RUN mv embree-2.16.4.x86_64.linux embree
+ADD embree-3.5.2.x86_64.linux.tar.gz /opt/
+RUN mv embree-3.5.2.x86_64.linux embree
 WORKDIR /opt/embree/
 
 WORKDIR /opt/
@@ -68,6 +68,7 @@ RUN true && \
     cmake .. \
           -Dembree_DIR=/opt/embree \
           -DOSPRAY_ENABLE_APPS:BOOL=OFF \
+          -DOSPRAY_ENABLE_TUTORIALS:BOOL=OFF \
           -DTBB_ROOT=/opt/tbb/ \
           -DOSPRAY_TASKING_SYSTEM=TBB \
     && \
