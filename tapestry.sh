@@ -279,28 +279,34 @@ tapestry-do-depend() {
         tapestry-run ${opt_verbose:+-v} git submodule update
     fi
 
-    if ! [ -f tapestry/ispc-v1.9.1-linux.tar.gz ]; then
+    if ! [ -f tapestry/ispc-v1.10.0-linux.tar.gz ]; then
+        printf $'Retrieving ISPC...' >&2
         tapestry-download \
-            -u http://sourceforge.net/projects/ispcmirror/files/v1.9.1/ispc-v1.9.1-linux.tar.gz/download \
-            -o tapestry/ispc-v1.9.1-linux.tar.gz \
+            -u https://sourceforge.net/projects/ispcmirror/files/v1.10.0/ispc-v1.10.0-linux.tar.gz/download \
+            -o tapestry/ispc-v1.10.0-linux.tar.gz \
             ${opt_verbose:+-v} \
             ${opt_progress:+-p}
+        printf $'done\n' >&2
     fi
 
-    if ! [ -f tapestry/embree-2.16.4.x86_64.linux.tar.gz ]; then
+    if ! [ -f tapestry/embree-3.5.2.x86_64.linux.tar.gz ]; then
+        printf $'Retrieving Embree...' >&2
         tapestry-download \
-            -u https://github.com/embree/embree/releases/download/v2.16.4/embree-2.16.4.x86_64.linux.tar.gz \
-            -o tapestry/embree-2.16.4.x86_64.linux.tar.gz \
+            -u https://github.com/embree/embree/releases/download/v3.5.2/embree-3.5.2.x86_64.linux.tar.gz \
+            -o tapestry/embree-3.5.2.x86_64.linux.tar.gz \
             ${opt_verbose:+-v} \
             ${opt_progress:+-p}
+        printf $'done\n' >&2
     fi
 
-    if ! [ -f tapestry/tbb2017_20161128oss_lin.tgz ]; then
+    if ! [ -f tapestry/tbb2019_20190320oss_lin.tgz ]; then
+        printf $'Retrieving TBB...' >&2
         tapestry-download \
-            -u https://github.com/01org/tbb/releases/download/2017_U3/tbb2017_20161128oss_lin.tgz \
-            -o tapestry/tbb2017_20161128oss_lin.tgz \
+            -u https://github.com/01org/tbb/releases/download/2019_U5/tbb2019_20190320oss_lin.tgz \
+            -o tapestry/tbb2019_20190320oss_lin.tgz \
             ${opt_verbose:+-v} \
             ${opt_progress:+-p}
+        printf $'done\n' >&2
     fi
 }
 
