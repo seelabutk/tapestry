@@ -217,3 +217,7 @@ and (orientation: portrait) {
     color: yellow; 
     text-decoration: none;
 }
+
+a.powered-by {
+    color: white;
+}
