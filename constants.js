@@ -10,7 +10,7 @@ function _TOGGLE() {
 function _TAPESTRY_HOST() {
 	return window.USE_AWS
 		? 'http://tapestry-load-balancer-6258f8b58ebec6df.elb.us-east-2.amazonaws.com:9011'
-		: 'http://accona.eecs.utk.edu:8010';
+		: 'https://accona.eecs.utk.edu';
 }
 
 window.TAPESTRY_HOST = _TAPESTRY_HOST();
