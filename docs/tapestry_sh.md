@@ -1,1 +1,0 @@
-# Tapestry Management Script

@@ -1,0 +1,223 @@
+html, body
+{
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+.hyperimage
+{
+    display: block;
+    margin: 5px auto;
+}
+.keyframes img 
+{
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+}
+
+/* Add a black background color to the top navigation */
+.topnav {
+    /*background: linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(0,0,0,1) 100%);*/
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    left: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    border-bottom: 1px solid rgb(82, 72, 72);
+    background-color: #131313;
+    z-index: 0;
+}
+
+.topnav li
+{
+    display: inline;
+}
+/* Style the links inside the navigation bar */
+.topnav a {
+    display:inline-block;
+    color: #eee;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    font-family: helvetica, tahoma, arial;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    color: #FDF151;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+    color: #E1455D;
+} 
+
+.text a {
+	color: #eee;
+}
+
+.text a:hover {
+	color: #FDF151;
+}
+
+.wrapper
+{
+    position: absolute;
+    top: 12px;
+    width: 300px;
+    right: 10px;
+}
+
+.footer
+{
+    width: 300px;
+    position: relative;
+    background-color: #2C71BF;
+    color: white;
+    font-family: helvetica, tahoma, arial;
+    font-size: 13px;
+    padding: 5px;
+    border-radius: 5px;
+	float: right;
+	margin-right: 10px;
+}
+
+.js-modal-btn
+{
+    cursor: pointer;
+}
+
+.text
+{
+    font-family: helvetica, tahoma, arial; 
+    color: #eee;
+    font-size: 30px;
+    width: 50%;
+    margin-top: 100px;
+    text-align: left;
+    padding: 30px 10px;
+    margin-left: 30px;
+    border-left: 10px solid #E1455D;
+}
+
+.text.text--smaller {
+	font-size: 25px;
+}
+
+.teaser-img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    -webkit-clip-path: polygon(0 50%, 0 100%, 100% 100%, 100% 15%);
+    z-index: -1;
+    opacity: 0.9;
+}
+
+.info-text
+{
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    font-family: helvetica, tahoma, arial; 
+    color: #eee;
+    font-size: 14px;
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: 0.6;
+    border-radius: 3px;
+    padding: 10px;
+    margin: 0 auto;
+    text-align: left;
+    width: 100%;
+}
+
+.logo{
+    position: absolute;
+    top: 8px;
+    font-family: arial;
+    color: #eee;
+    padding: 8px;
+    float: left;
+    margin-left: 10px;
+    margin-top: -4px;
+    font-weight: 600;
+    font-size: 25px;
+    z-index: 2;
+}
+
+.logo span.t
+{
+    text-shadow:
+    -1px -1px 0px rgb(0, 0, 0),
+    -2px -2px 0px rgb(255, 255, 255),
+    -3px -3px 0px rgb(0, 0, 0),
+    -4px -4px 0px rgb(255, 255, 255),
+    -5px -5px 0px rgb(0, 0, 0),
+    -6px -6px 0px rgb(255, 255, 255);
+    transform: skewY(-15deg);
+    display: inline-block;
+}
+
+.logo span.rest
+{
+    display: inline-block;
+}
+
+.error
+{
+    background-color: red;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: portrait) { 
+
+	.teaser-img
+    {
+        height: auto;
+        top: 200px;
+    }
+    .wrapper
+    {
+        top: 70px;
+    }
+}
+
+/* Portrait */
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 568px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (orientation: portrait) {
+	.teaser-img
+    {
+        height: auto;
+        top: 200px;
+    }
+    .wrapper
+    {
+        top: 70px;
+    }
+}
+ 
+.link
+{
+    color: yellow; 
+    text-decoration: none;
+}
+
+a.powered-by {
+    color: white;
+}

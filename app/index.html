@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+    <head>
+        <title>Tapestry</title>
+	<script src="constants.js"></script>
+        <link rel="stylesheet" href="css/style.css">
+
+        <!-- jQuery dependency -->
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+        <!-- For testing -->
+        <script src="js/smooth.js"></script>
+        <script src="js/gremlins.min.js"></script>
+        <script src="js/testing.js"></script>
+
+        <script src="js/gif.js"></script>
+
+        <!-- Core Tapestry JS -->
+        <script src="js/tools.js"></script>
+        <script src="js/sylvester.js"></script>
+        <script src="js/math.js"></script>
+        <script src="js/arcball.js"></script>
+        <script src="js/tapestry.js"></script>
+
+        <!-- For minified version -->
+        <!-- <script src="js/tapestry.min.js></script> -->
+        <script>
+            $(document).ready(function(){
+                var width = screen.availWidth;
+                var height = screen.availHeight;
+
+                $(".hyperimage").css({
+                    width: width,
+                    height: height,
+                })
+
+		var tapestry_server = TAPESTRY_HOST;
+		$(".hyperimage").tapestry({
+                    host: tapestry_server,
+                    n_tiles: 4,
+                    width: height,
+                    height: height,
+                    low_res: 256,
+                    zoom: 3000,
+                    error_callback: function(){}
+                });
+
+
+                // Listen to slider events and change the 
+                // isosurface threshold accordingly
+                $(".threshold-slider").on("input", function(){
+                    $(".hyperimage").eq(1).data("tapestry")
+                        .settings.isovalues=[parseInt($(this).val())];
+                    $(".hyperimage").eq(1).data("tapestry").render(0);
+                });
+            });
+        </script>
+    </head>
+    <body style="background: #1b1b1b;">
+        <div class="logo"><span class="t">T</span><span class="rest">apestry</span></div>
+        <ul class="topnav">
+            <li><a href="https://github.com/seelabutk/tapestry">Github</a></li>
+            <li><a href="https://ieeexplore.ieee.org/document/8523628">Publication</a></li>
+        </ul>
+        <div class="hyperimage" data-dataset="data" data-colormap="Greys" data-isovalues="0.0009"></div>
+        <div class="wrapper">
+            <div class="footer">Powered by <a class="powered-by" href="https://software.intel.com/en-us/rendering-framework">Intel&reg; oneAPI Rendering Toolkit</a></div>
+        </div>
+    </body>
+</html>
+

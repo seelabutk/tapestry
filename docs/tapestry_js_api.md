@@ -1,1 +1,0 @@
-# Tapestry.js functions

@@ -1,1 +1,0 @@
-# Isosurface support

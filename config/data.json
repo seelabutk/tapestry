@@ -1,0 +1,1 @@
+{"filename": "/data/tacc.raw", "dimensions": [256, 256, 256], "imageSize": [512, 512], "outputImageFilename": "/mnt/data/image.png", "colorMap": "Greys", "backgroundColor": [27, 27, 27], "cameraPosition": [0, 0, 512], "opacityAttenuation": 0.2}
