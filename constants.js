@@ -13,7 +13,7 @@ function _TOGGLE() {
 
 function _TAPESTRY_HOST() {
 	return window.USE_AWS
-		? 'http://3.86.88.218'
+		? 'http://54.173.9.241'
 		: 'https://accona.eecs.utk.edu';
 }
 
