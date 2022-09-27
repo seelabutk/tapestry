@@ -13,7 +13,7 @@ function _TOGGLE() {
 
 function _TAPESTRY_HOST() {
 	return window.USE_AWS
-		? 'http://54.173.9.241'
+		? 'http://54.234.164.183'
 		: 'https://accona.eecs.utk.edu';
 }
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		const div = document.createElement('div');
 		div.style.position = 'fixed';
 		if (extra) div.style.top = 0;
-		if (index) div.style.top = '50px';
+		if (index || home) div.style.top = '50px'; 
 		div.style.left = '40%';
 		div.style.background = '#aca';
 		div.style.zIndex = 10000;
